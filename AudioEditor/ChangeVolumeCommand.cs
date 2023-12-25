@@ -1,21 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing.Text;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CommandInterface;
-
 
 namespace AudioEditor
 {
-    public class ChangeSpeedCommand : ICommand
+    public class ChangeVolumeCommand : ICommand
     {
-        private double speed;
-        public ChangeSpeedCommand(double speed)
+        private double volume;
+
+        public ChangeVolumeCommand(double volume)
         {
-            this.speed = speed;
+            this.volume = volume;
         }
 
         public string Execute()
@@ -25,7 +20,7 @@ namespace AudioEditor
                 string errorOutput = "";
                 var input = FileCommands.InputFilePath;
                 var output = FileCommands.OutputFilePath;
-                var command = $"-y -i \"{input}\" -filter:a \"atempo={speed.ToString(System.Globalization.CultureInfo.InvariantCulture)}\" -vn \"{output}\"";
+                var command = $"-y -i \"{input}\" -af \"volume={volume.ToString(System.Globalization.CultureInfo.InvariantCulture)}dB\" \"{output}\"";
 
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {

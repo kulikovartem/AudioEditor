@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using AudioEditor;
 using System.Diagnostics;
-using System.Drawing.Text;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 using CommandInterface;
-
 
 namespace AudioEditor
 {
-    public class ChangeSpeedCommand : ICommand
+    public class FadeOutCommand : ICommand
     {
-        private double speed;
-        public ChangeSpeedCommand(double speed)
+        private double duration;
+
+        public FadeOutCommand(double duration)
         {
-            this.speed = speed;
+            this.duration = duration;
         }
 
         public string Execute()
@@ -25,7 +21,8 @@ namespace AudioEditor
                 string errorOutput = "";
                 var input = FileCommands.InputFilePath;
                 var output = FileCommands.OutputFilePath;
-                var command = $"-y -i \"{input}\" -filter:a \"atempo={speed.ToString(System.Globalization.CultureInfo.InvariantCulture)}\" -vn \"{output}\"";
+                var command = $"-y -i \"{input}\" -af \"afade=t=in:d={duration.ToString(System.Globalization.CultureInfo.InvariantCulture)}\" \"{output}\"";
+
 
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
@@ -55,5 +52,4 @@ namespace AudioEditor
             }
         }
     }
-
 }

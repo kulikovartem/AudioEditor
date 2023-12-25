@@ -1,47 +1,55 @@
-﻿using System;
+﻿using NAudio.Wave;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CommandInterface;
-
 
 namespace AudioEditor
 {
     public class CommandManager
     {
-        private LinkedList<Fragment> fragments = new LinkedList<Fragment>();
-        private Stack<ICommand> undoStack = new Stack<ICommand>();
-        private Stack<ICommand> redoStack = new Stack<ICommand>();
+        private Stack<WaveStream> undoStack;
+        private Stack<WaveStream> redoStack;
+        public static WaveStream CurrentTrack { get; set; }
+
+        public static string Type { get; set; }
+
+        public CommandManager(WaveStream track)
+        {
+            CurrentTrack = track;
+            undoStack = new Stack<WaveStream>();
+            redoStack = new Stack<WaveStream>();
+        }
 
         public void ExecuteCommand(ICommand command)
         {
-            command.Execute();
-            undoStack.Push(command);
+            if (CurrentTrack != null)
+            {
+                undoStack.Push(CurrentTrack);
+            }
+            FileCommands.SaveWaveStreamToFile(CurrentTrack);
+            var a = command.Execute();
+            var root = FileCommands.OutputFilePath;
+            CurrentTrack = FileCommands.LoadAudioFile(root);
             redoStack.Clear();
         }
+        private bool CanUndo => undoStack.Count > 0;
+        private bool CanRedo => redoStack.Count > 0;
 
         public void Undo()
         {
-            if (undoStack.Count > 0)
+            if (CanUndo)
             {
-                var command = undoStack.Pop();
-                command.Undo();
-                redoStack.Push(command);
+                redoStack.Push(CurrentTrack);
+                CurrentTrack = undoStack.Pop();
             }
         }
 
         public void Redo()
         {
-            if (redoStack.Count > 0)
+            if (CanRedo)
             {
-                var command = redoStack.Pop();
-                command.Execute();
-                undoStack.Push(command);
+                undoStack.Push(CurrentTrack);
+                CurrentTrack = redoStack.Pop();
             }
         }
-
-        public Fragment GetLast() { return fragments.Last(); }
     }
-
 }

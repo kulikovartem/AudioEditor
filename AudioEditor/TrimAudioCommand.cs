@@ -1,21 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing.Text;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
+using System;
 using CommandInterface;
 
 
 namespace AudioEditor
 {
-    public class ChangeSpeedCommand : ICommand
+    public class TrimAudioCommand : ICommand
     {
-        private double speed;
-        public ChangeSpeedCommand(double speed)
+        private double startTime;
+        private double endTime;
+
+        public TrimAudioCommand(double startTime, double endTime)
         {
-            this.speed = speed;
+            this.startTime = startTime;
+            this.endTime = endTime;
         }
 
         public string Execute()
@@ -25,7 +23,7 @@ namespace AudioEditor
                 string errorOutput = "";
                 var input = FileCommands.InputFilePath;
                 var output = FileCommands.OutputFilePath;
-                var command = $"-y -i \"{input}\" -filter:a \"atempo={speed.ToString(System.Globalization.CultureInfo.InvariantCulture)}\" -vn \"{output}\"";
+                var command = $"-y -i \"{input}\" -af \"atrim=start={startTime.ToString(System.Globalization.CultureInfo.InvariantCulture)}:end={endTime.ToString(System.Globalization.CultureInfo.InvariantCulture)}\" -vn \"{output}\"";
 
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
@@ -55,5 +53,4 @@ namespace AudioEditor
             }
         }
     }
-
 }
