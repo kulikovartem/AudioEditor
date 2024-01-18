@@ -31,20 +31,20 @@
         <!-- Левый стек панели для кнопок -->
         <StackPanel Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Button Content="Load" Width="150" Margin="10" Click="LoadTrackButton_Click" Style="{StaticResource StyledButton}"/>
-            <Button Content="Merge" Width="150" Margin="10" Style="{StaticResource StyledButton}"/>
-            <Button Content="Mix" Width="150" Margin="10" Style="{StaticResource StyledButton}"/>
+            <Button Content="Merge" Width="150" Margin="10" Click="MergeButton_Click" Style="{StaticResource StyledButton}"/>
+            <Button Content="Mix" Width="150" Margin="10" Click="MixButton_Click" Style="{StaticResource StyledButton}"/>
             <Button Content="Change Volume" Width="150" Margin="10" Style="{StaticResource StyledButton}"/>
-            <Button Content="Trim" Width="150" Margin="10" Style="{StaticResource StyledButton}"/>
-            <Button Content="Change Speed" Width="150" Margin="10" Click="ChangeSpeed" Style="{StaticResource StyledButton}"/>
+            <Button Content="Trim" Width="150" Margin="10" Click="TrimButton_Click" Style="{StaticResource StyledButton}"/>
+            <Button Content="Change Speed" Width="150" Margin="10" Click="ChangeSpeedButton_Click" Style="{StaticResource StyledButton}"/>
         </StackPanel>
 
         <!-- Правый стек панели для кнопок -->
         <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button Content="Undo" Width="150" Margin="10" Style="{StaticResource StyledButton}"/>
-            <Button Content="Redo" Width="150" Margin="10" Style="{StaticResource StyledButton}"/>
-            <Button Content="Fade In" Width="150" Margin="10" Style="{StaticResource StyledButton}"/>
-            <Button Content="Fade Out" Width="150" Margin="10" Style="{StaticResource StyledButton}"/>
-            <Button Content="Play" Width="150" Margin="10" Click="PlayButton_Click" Style="{StaticResource StyledButton}"/>
+            <Button Content="Undo" Width="150" Margin="10" Click="Undo_Click" Style="{StaticResource StyledButton}"/>
+            <Button Content="Redo" Width="150" Margin="10" Click="Redo_Click" Style="{StaticResource StyledButton}"/>
+            <Button Content="Fade In" Width="150" Margin="10" Click="FadeInButton_Click" Style="{StaticResource StyledButton}"/>
+            <Button Content="Fade Out" Width="150" Margin="10" Click="FadeOutButton_Click" Style="{StaticResource StyledButton}"/>
+            <Button Content="Save" Width="150" Margin="10" Click="SaveButton_Click" Style="{StaticResource StyledButton}"/>
         </StackPanel>
     </Grid>
 </Window>

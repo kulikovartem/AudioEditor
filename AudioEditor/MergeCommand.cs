@@ -4,13 +4,11 @@ using CommandInterface;
 
 namespace AudioEditor
 {
-    internal class MergeCommand
-    {
-        public class MergeAudioCommand : ICommand
+        public class MergeCommand : ICommand
         {
             private string inputFilePath2;
 
-            public MergeAudioCommand(string inputFilePath2)
+            public MergeCommand(string inputFilePath2)
             {
                 this.inputFilePath2 = inputFilePath2;
             }
@@ -20,9 +18,9 @@ namespace AudioEditor
                 try
                 {
                     string errorOutput = "";
-                    var input = FileCommands.InputFilePath;
-                    var output = FileCommands.OutputFilePath;
-                    var command = $"-y -i \"{input}\" -i \"{inputFilePath2}\" -filter_complex \"amerge=inputs=2\" -ac 2 \"{output}\"";
+                    var input = FileCommands.LastSaved;
+                    FileCommands.name = FileCommands.name + "1";
+                    var command = $"-i {input} -i {inputFilePath2} -filter_complex \"[0:a][1:a]concat=n=2:v=0:a=1[out]\" -map \"[out]\" {FileCommands.LastSaved}";
 
                     ProcessStartInfo startInfo = new ProcessStartInfo
                     {
@@ -52,6 +50,4 @@ namespace AudioEditor
                 }
             }
         }
-
-    }
 }

@@ -18,10 +18,9 @@ namespace AudioEditor
             try
             {
                 string errorOutput = "";
-                var output = FileCommands.OutputFilePath;
-                var input = FileCommands.InputFilePath;
-                var command = $"-y -i \"{input}\" -i \"{inputFilePath2}\" -filter_complex \"amix=inputs=2:duration=longest\" \"{output}\"";
-
+                var input = FileCommands.LastSaved;
+                FileCommands.name = FileCommands.name + "1";
+                var command = $"-y -i \"{input}\" -i \"{inputFilePath2}\" -filter_complex \"amix=inputs=2:duration=longest\" \"{FileCommands.LastSaved}\"";
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
                     FileName = FileCommands.RootFfmpeg,

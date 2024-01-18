@@ -14,11 +14,9 @@ using System.Windows.Shapes;
 
 namespace AudioEditor
 {
-    public partial class ParameterWindow : Window
+    public partial class TrimWindow : Window
     {
-        public string Arg1 { get; private set; }
-
-        public ParameterWindow()
+        public TrimWindow()
         {
             InitializeComponent();
         }
@@ -31,9 +29,19 @@ namespace AudioEditor
 
         private void ApplyButton_Click(object sender, RoutedEventArgs e)
         {
-            Arg1 = Arg1TextBox.Text;
-            this.DialogResult = true;
-            this.Close();
+            double parsedArg1;
+            double parsedArg2;
+
+            if ((double.TryParse(Arg1TextBox.Text, out parsedArg1)) && (double.TryParse(Arg2TextBox.Text, out parsedArg2)))
+            {
+                var command = new TrimAudioCommand(parsedArg1, parsedArg2);
+                MainWindow.commandManager.ExecuteCommand(command);
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("Ошибка: Аргумент 1 или 2 должен быть числом типа double.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

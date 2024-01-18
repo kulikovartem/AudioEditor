@@ -2,88 +2,65 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Markup;
+using NAudio.Lame;
 using NAudio.Wave;
+using NAudio.Wave.SampleProviders;
+using NLayer.NAudioSupport;
+using NLayer;
+using System.Reflection.PortableExecutable;
 
 namespace AudioEditor
 {
     public class FileCommands
     {
         public static readonly string RootFfmpeg = "ffmpeg";
-        public static string InputFilePath => $"C:\\Users\\artem\\Downloads\\audiofile{CommandManager.Type}";
-        public static string OutputFilePath => $"C:\\Users\\artem\\Documents\\audiofile{CommandManager.Type}";
+        public static string LastSaved => $"C:\\Users\\artem\\Downloads\\{name}{CommandManager.Type}";         
+        public static string name = "audiofile";
 
 
-        public static WaveStream LoadAudioFile(string filePath)
+        public static void BytesToMp3(byte[] audioBytes, string outputPath)
         {
-            if (!File.Exists(filePath))
+            using (var ms = new MemoryStream(audioBytes))
             {
-                throw new FileNotFoundException("File not found", filePath);
-            }
-
-            try
-            {
-                var lastFour = filePath.Substring(filePath.Length - 4);
-                if (lastFour == ".wav")
+                using (var waveStream = new RawSourceWaveStream(ms, new WaveFormat()))
                 {
-                    CommandManager.Type = ".wav";
-                    return new WaveFileReader(filePath);
-                }
-                else if (lastFour == ".mp3")
-                {
-                    CommandManager.Type = ".mp3";
-                    return new Mp3FileReader(filePath);
-                }
-                else
-                {
-                    throw new Exception("Неправильный формат");
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"An error occurred while loading the file: {ex.Message}");
-                throw; // Повторно вызывает исключение для внешнего обработчика
-            }
-        }
-
-        public static void SaveWaveStreamToFile(WaveStream waveStream, string outputPath)
-        {
-            waveStream.Position = 0;
-            using (var waveFileWriter = new WaveFileWriter(outputPath, waveStream.WaveFormat))
-            {
-                byte[] buffer = new byte[waveStream.WaveFormat.AverageBytesPerSecond];
-                int bytesRead;
-                while ((bytesRead = waveStream.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    waveFileWriter.Write(buffer, 0, bytesRead);
+                    using (var mp3Writer = new LameMP3FileWriter(outputPath, waveStream.WaveFormat, LAMEPreset.VBR_90))
+                    {
+                        waveStream.CopyTo(mp3Writer);
+                    }
                 }
             }
         }
 
-        public static void SaveWaveStreamToFile(WaveStream waveStream)
+        public static void BytesToMp3(byte[] track)
         {
-            var root = InputFilePath;
-            SaveWaveStreamToFile(waveStream, root);
+            BytesToMp3(track, FileCommands.LastSaved);
         }
 
-        public static void DeleteFile(string filePath)
+
+        public static byte[] Mp3ToBytes(string mp3FilePath)
         {
-            try
+            using (var mp3Stream = new FileStream(mp3FilePath, FileMode.Open))
             {
-                if (File.Exists(filePath))
+                using (var mp3Reader = new Mp3FileReader(mp3Stream))
                 {
-                    File.Delete(filePath);
-                    Console.WriteLine($"Файл {filePath} успешно удален.");
+                    using (var ms = new MemoryStream())
+                    {
+                        int bytesRead;
+                        byte[] buffer = new byte[8192];
+
+                        while ((bytesRead = mp3Reader.Read(buffer, 0, buffer.Length)) > 0)
+                        {
+                            ms.Write(buffer, 0, bytesRead);
+                        }
+
+                        return ms.ToArray();
+                    }
                 }
-                else
-                {
-                    Console.WriteLine($"Файл {filePath} не найден.");
-                }
-            }
-            catch (IOException e)
-            {
-                Console.WriteLine($"Произошла ошибка при удалении файла: {e.Message}");
             }
         }
     }

@@ -18,9 +18,9 @@ namespace AudioEditor
             try
             {
                 string errorOutput = "";
-                var input = FileCommands.InputFilePath;
-                var output = FileCommands.OutputFilePath;
-                var command = $"-y -i \"{input}\" -af \"volume={volume.ToString(System.Globalization.CultureInfo.InvariantCulture)}dB\" \"{output}\"";
+                var input = FileCommands.LastSaved;
+                FileCommands.name = FileCommands.name + "1";
+                var command = $"-y -i \"{input}\" -af \"volume={volume.ToString(System.Globalization.CultureInfo.InvariantCulture)}dB\" \"{FileCommands.LastSaved}\"";
 
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {

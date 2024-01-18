@@ -1,16 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 using Microsoft.Win32;
-using NAudio.Wave;
-using CommandInterface;
 
 
 namespace AudioEditor
 {
     public partial class MainWindow : Window
     {
-        private WaveOutEvent outputDevice;
-        private CommandManager commandManager;
+        public static CommandManager commandManager;
 
         public MainWindow()
         {
@@ -28,46 +36,99 @@ namespace AudioEditor
 
             if (openFileDialog.ShowDialog() == true)
             {
-                commandManager = new CommandManager(FileCommands.LoadAudioFile(openFileDialog.FileName));
+                commandManager = new CommandManager(FileCommands.Mp3ToBytes(openFileDialog.FileName));
+                FileCommands.BytesToMp3(CommandManager.CurrentTrack);
             }
         }
 
-        private void PlayButton_Click(object sender, RoutedEventArgs e)
+
+        private void FadeOutButton_Click(object sender, RoutedEventArgs e)
         {
-            if (CommandManager.CurrentTrack == null)
-            {
-                MessageBox.Show("WaveStream не загружен.");
-                return;
-            }
+            FadeOutWindow fadeoutwindow = new FadeOutWindow();
+            fadeoutwindow.Show();
+        }
 
-            if (outputDevice == null)
-            {
-                outputDevice = new WaveOutEvent();
-                outputDevice.Init(CommandManager.CurrentTrack);
-            }
+        private void FadeInButton_Click(object sender, RoutedEventArgs e)
+        {
+            FadeInWindow fadeinwindow = new FadeInWindow();
+            fadeinwindow.Show();
+        }
 
-            if (outputDevice.PlaybackState == PlaybackState.Playing)
+        private void Redo_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow.commandManager.Redo();
+        }
+
+        private void Undo_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow.commandManager.Undo();
+        }
+
+        private void ChangeSpeedButton_Click(object sender, RoutedEventArgs e)
+        {
+            ChangeSpeedWindow changespeedwin = new ChangeSpeedWindow();
+            changespeedwin.Show();
+        }
+
+        private void MergeButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
             {
-                outputDevice.Pause();
-            }
-            else
+                Filter = "Audio files (*.mp3;*.wav)|*.mp3;*.wav",
+                Title = "Select an Audio File"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
             {
-                CommandManager.CurrentTrack.Position = 0;
-                outputDevice.Play();
+                var name = openFileDialog.FileName;
+                var command = new MergeCommand(name);
+                MainWindow.commandManager.ExecuteCommand(command);
             }
         }
 
-        private void ChangeSpeed(object sender, RoutedEventArgs e)
+        private void MixButton_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new ParameterWindow();
-            if (dialog.ShowDialog() == true)
+            OpenFileDialog openFileDialog = new OpenFileDialog
             {
-                string arg1 = dialog.Arg1;
-                if (double.TryParse(arg1, out double arg))
-                {
-                    commandManager.ExecuteCommand(new ChangeSpeedCommand(arg));
-                }
+                Filter = "Audio files (*.mp3;*.wav)|*.mp3;*.wav",
+                Title = "Select an Audio File"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                var name = openFileDialog.FileName;
+                var command = new MixAudioCommand(name);
+                MainWindow.commandManager.ExecuteCommand(command);
             }
+        }
+
+        private void TrimButton_Click(object sender, RoutedEventArgs e)
+        {
+            var TrimWindow = new TrimWindow();
+            TrimWindow.Show();
+        }
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            var saveFileDialog = new SaveFileDialog
+            {
+                Title = "Сохранить MP3 файл",
+                Filter = "Файлы MP3|*.mp3"
+            };
+
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                string outputPath = saveFileDialog.FileName;
+                FileCommands.BytesToMp3(CommandManager.CurrentTrack, outputPath);
+
+                MessageBox.Show("Файл MP3 сохранен успешно!", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private void ChangeVolumeButton_Click(object sender, RoutedEventArgs e)
+        {
+            var changevolumewin = new ChangeVolumeWindow();
+            changevolumewin.Show();
         }
     }
 }

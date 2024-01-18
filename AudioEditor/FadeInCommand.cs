@@ -19,10 +19,10 @@ namespace AudioEditor
             try
             {
                 string errorOutput = "";
-                var input = FileCommands.InputFilePath;
-                var output = FileCommands.OutputFilePath;
-                var command = $"-y -i \"{input}\" -af \"afade=t=in:d={duration.ToString(System.Globalization.CultureInfo.InvariantCulture)}\" \"{output}\"";
-                ;
+                var input = FileCommands.LastSaved;
+                FileCommands.name = FileCommands.name + "1";
+                var command = $"-y -i \"{input}\" -af \"afade=t=in:d={duration.ToString(System.Globalization.CultureInfo.InvariantCulture)}\" \"{FileCommands.LastSaved}\"";
+                
 
 
                 ProcessStartInfo startInfo = new ProcessStartInfo

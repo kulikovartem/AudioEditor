@@ -1,22 +1,21 @@
-﻿using NAudio.Wave;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using CommandInterface;
 
 namespace AudioEditor
 {
     public class CommandManager
     {
-        private Stack<WaveStream> undoStack;
-        private Stack<WaveStream> redoStack;
-        public static WaveStream CurrentTrack { get; set; }
+        private Stack<byte[]> undoStack;
+        private Stack<byte[]> redoStack;
+        public static byte[] CurrentTrack { get; set; }
 
-        public static string Type { get; set; }
+        public static string Type = ".mp3";
 
-        public CommandManager(WaveStream track)
+        public CommandManager(byte[] track)
         {
             CurrentTrack = track;
-            undoStack = new Stack<WaveStream>();
-            redoStack = new Stack<WaveStream>();
+            undoStack = new Stack<byte[]>();
+            redoStack = new Stack<byte[]>();
         }
 
         public void ExecuteCommand(ICommand command)
@@ -25,10 +24,12 @@ namespace AudioEditor
             {
                 undoStack.Push(CurrentTrack);
             }
-            FileCommands.SaveWaveStreamToFile(CurrentTrack);
             var a = command.Execute();
-            var root = FileCommands.OutputFilePath;
-            CurrentTrack = FileCommands.LoadAudioFile(root);
+            if (a != "")
+            {
+                throw new System.Exception(a);
+            }
+            CurrentTrack = FileCommands.Mp3ToBytes(FileCommands.LastSaved);
             redoStack.Clear();
         }
         private bool CanUndo => undoStack.Count > 0;

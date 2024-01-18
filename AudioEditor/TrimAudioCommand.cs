@@ -21,10 +21,9 @@ namespace AudioEditor
             try
             {
                 string errorOutput = "";
-                var input = FileCommands.InputFilePath;
-                var output = FileCommands.OutputFilePath;
-                var command = $"-y -i \"{input}\" -af \"atrim=start={startTime.ToString(System.Globalization.CultureInfo.InvariantCulture)}:end={endTime.ToString(System.Globalization.CultureInfo.InvariantCulture)}\" -vn \"{output}\"";
-
+                var input = FileCommands.LastSaved;
+                FileCommands.name = FileCommands.name + "1";
+                var command = $"-y -i \"{input}\" -af \"atrim=start={startTime.ToString(System.Globalization.CultureInfo.InvariantCulture)}:end={endTime.ToString(System.Globalization.CultureInfo.InvariantCulture)}\" -vn \"{FileCommands.LastSaved}\"";
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
                     FileName = FileCommands.RootFfmpeg,

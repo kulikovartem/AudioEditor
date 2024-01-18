@@ -23,9 +23,9 @@ namespace AudioEditor
             try
             {
                 string errorOutput = "";
-                var input = FileCommands.InputFilePath;
-                var output = FileCommands.OutputFilePath;
-                var command = $"-y -i \"{input}\" -filter:a \"atempo={speed.ToString(System.Globalization.CultureInfo.InvariantCulture)}\" -vn \"{output}\"";
+                var input = FileCommands.LastSaved;
+                FileCommands.name = FileCommands.name + "1";
+                var command = $"-y -i \"{input}\" -filter:a \"atempo={speed.ToString(System.Globalization.CultureInfo.InvariantCulture)}\" -vn \"{FileCommands.LastSaved}\"";
 
                 ProcessStartInfo startInfo = new ProcessStartInfo
                 {
