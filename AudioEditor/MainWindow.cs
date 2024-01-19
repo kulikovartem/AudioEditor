@@ -23,6 +23,7 @@ namespace AudioEditor
         public MainWindow()
         {
             InitializeComponent();
+            DisableAllButtonsExceptLoad();
         }
 
 
@@ -38,6 +39,7 @@ namespace AudioEditor
             {
                 commandManager = new CommandManager(FileCommands.Mp3ToBytes(openFileDialog.FileName));
                 FileCommands.BytesToMp3(CommandManager.CurrentTrack);
+                EnableAllButtons();
             }
         }
 
@@ -129,6 +131,44 @@ namespace AudioEditor
         {
             var changevolumewin = new ChangeVolumeWindow();
             changevolumewin.Show();
+        }
+
+        private void EnableAllButtons()
+        {
+            foreach (UIElement element in StackPanel_Left.Children)
+            {
+                if (element is Button button)
+                {
+                    button.IsEnabled = true;
+                }
+            }
+
+            foreach (UIElement element in StackPanel_Right.Children)
+            {
+                if (element is Button button)
+                {
+                    button.IsEnabled = true;
+                }
+            }
+        }
+
+        private void DisableAllButtonsExceptLoad()
+        {
+            foreach (UIElement element in StackPanel_Left.Children)
+            {
+                if (element is Button button && button != LoadTrackButton)
+                {
+                    button.IsEnabled = false;
+                }
+            }
+
+            foreach (UIElement element in StackPanel_Right.Children)
+            {
+                if (element is Button button && button != LoadTrackButton)
+                {
+                    button.IsEnabled = false;
+                }
+            }
         }
     }
 }

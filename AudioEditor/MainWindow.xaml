@@ -29,8 +29,8 @@
         <Image Source="C:\Users\artem\Desktop\DALL.png" Stretch="Fill" Grid.ColumnSpan="2"/>
 
         <!-- Левый стек панели для кнопок -->
-        <StackPanel Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button Content="Load" Width="150" Margin="10" Click="LoadTrackButton_Click" Style="{StaticResource StyledButton}"/>
+        <StackPanel x:Name="StackPanel_Left" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button x:Name="LoadTrackButton" Content="Load" Width="150" Margin="10" Click="LoadTrackButton_Click" Style="{StaticResource StyledButton}"/>
             <Button Content="Merge" Width="150" Margin="10" Click="MergeButton_Click" Style="{StaticResource StyledButton}"/>
             <Button Content="Mix" Width="150" Margin="10" Click="MixButton_Click" Style="{StaticResource StyledButton}"/>
             <Button Content="Change Volume" Width="150" Margin="10" Click="ChangeVolumeButton_Click" Style="{StaticResource StyledButton}"/>
@@ -39,7 +39,7 @@
         </StackPanel>
 
         <!-- Правый стек панели для кнопок -->
-        <StackPanel Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <StackPanel x:Name="StackPanel_Right" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
             <Button Content="Undo" Width="150" Margin="10" Click="Undo_Click" Style="{StaticResource StyledButton}"/>
             <Button Content="Redo" Width="150" Margin="10" Click="Redo_Click" Style="{StaticResource StyledButton}"/>
             <Button Content="Fade In" Width="150" Margin="10" Click="FadeInButton_Click" Style="{StaticResource StyledButton}"/>
