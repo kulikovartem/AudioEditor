@@ -33,7 +33,7 @@
             <Button Content="Load" Width="150" Margin="10" Click="LoadTrackButton_Click" Style="{StaticResource StyledButton}"/>
             <Button Content="Merge" Width="150" Margin="10" Click="MergeButton_Click" Style="{StaticResource StyledButton}"/>
             <Button Content="Mix" Width="150" Margin="10" Click="MixButton_Click" Style="{StaticResource StyledButton}"/>
-            <Button Content="Change Volume" Width="150" Margin="10" Style="{StaticResource StyledButton}"/>
+            <Button Content="Change Volume" Width="150" Margin="10" Click="ChangeVolumeButton_Click" Style="{StaticResource StyledButton}"/>
             <Button Content="Trim" Width="150" Margin="10" Click="TrimButton_Click" Style="{StaticResource StyledButton}"/>
             <Button Content="Change Speed" Width="150" Margin="10" Click="ChangeSpeedButton_Click" Style="{StaticResource StyledButton}"/>
         </StackPanel>
