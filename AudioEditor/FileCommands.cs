@@ -12,15 +12,49 @@ using NAudio.Wave.SampleProviders;
 using NLayer.NAudioSupport;
 using NLayer;
 using System.Reflection.PortableExecutable;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace AudioEditor
 {
     public class FileCommands
     {
         public static readonly string RootFfmpeg = "ffmpeg";
-        public static string LastSaved => $"C:\\Users\\artem\\Downloads\\{name}{CommandManager.Type}";         
+
+        // Получаем путь к текущей рабочей директории
+        public static string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+        // Составляем полный путь к целевой папке
+        public static string folderPath = Path.Combine(CleanAfter(currentDirectory, "bin"), "temp");
+
+        //MakeFolder(folderPath);
+        public static string LastSaved => $"{folderPath}\\{name}{CommandManager.Type}";         
         public static string name = "audiofile";
 
+
+        private static string CleanAfter(string path, string word)
+        {
+            string[] words = path.Split('\\');
+            List<string> res = new List<string>();
+            var adding = false;
+            for(var i = words.Length - 1; i >= 0; i--)
+            {
+                if(adding)
+                    res.Add(words[i]);
+                if (words[i] == word)
+                    adding = true;
+            }
+            res.Reverse();
+            return string.Join('\\', res);
+
+        }
+        private static void MakeFolder(string folderPath)
+        {
+
+            // Удаляем папку и создаем
+            Directory.Delete(folderPath, true);
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+          
+        }
 
         public static void BytesToMp3(byte[] audioBytes, string outputPath)
         {
