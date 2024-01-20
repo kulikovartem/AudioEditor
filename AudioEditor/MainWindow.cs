@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Xml.Linq;
 using Microsoft.Win32;
 
 
@@ -39,6 +40,7 @@ namespace AudioEditor
             if (openFileDialog.ShowDialog() == true)
             {
                 MakeFolder(MakeFolderPath("temp"));
+                FileCommands.name = "audiofile";
                 commandManager = new CommandManager(FileCommands.Mp3ToBytes(openFileDialog.FileName));
                 FileCommands.BytesToMp3(CommandManager.CurrentTrack);
                 EnableAllButtons();

@@ -30,16 +30,17 @@ namespace AudioEditor
         private void ApplyButton_Click(object sender, RoutedEventArgs e)
         {
             double parsedArg1;
+            double parsedArg2;
 
-            if (double.TryParse(Arg1TextBox.Text, out parsedArg1))
+            if ((double.TryParse(Arg1TextBox.Text, out parsedArg1)) && (double.TryParse(Arg2TextBox.Text, out parsedArg2)))
             {
-                var command = new FadeOutCommand(parsedArg1);
+                var command = new FadeOutCommand(parsedArg1, parsedArg2);
                 MainWindow.commandManager.ExecuteCommand(command);
                 this.Close();
             }
             else
             {
-                MessageBox.Show("Ошибка: Аргумент 1 должен быть числом типа double.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Ошибка: Аргумент 1 или 2 должен быть числом типа double.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }
