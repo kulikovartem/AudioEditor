@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,12 +38,45 @@ namespace AudioEditor
 
             if (openFileDialog.ShowDialog() == true)
             {
+                MakeFolder(MakeFolderPath("temp"));
                 commandManager = new CommandManager(FileCommands.Mp3ToBytes(openFileDialog.FileName));
                 FileCommands.BytesToMp3(CommandManager.CurrentTrack);
                 EnableAllButtons();
             }
         }
+        private static string MakeFolderPath(string pathName)
+        {
 
+            // Получаем путь к текущей рабочей директории
+            var currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            // Составляем полный путь к целевой папке
+            return System.IO.Path.Combine(CleanAfter(currentDirectory, "bin"), pathName);
+
+        }
+        private static string CleanAfter(string path, string word)
+        {
+            string[] words = path.Split('\\');
+            List<string> res = new List<string>();
+            var adding = false;
+            for (var i = words.Length - 1; i >= 0; i--)
+            {
+                if (adding)
+                    res.Add(words[i]);
+                if (words[i] == word)
+                    adding = true;
+            }
+            res.Reverse();
+            return string.Join('\\', res);
+        }
+        private static void MakeFolder(string folderPath)
+        {
+
+            // Удаляем папку и создаем
+            Directory.Delete(folderPath, true);
+            if (!Directory.Exists(folderPath))
+                Directory.CreateDirectory(folderPath);
+
+        }
 
         private void FadeOutButton_Click(object sender, RoutedEventArgs e)
         {

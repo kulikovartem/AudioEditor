@@ -19,13 +19,7 @@ namespace AudioEditor
     public class FileCommands
     {
         public static readonly string RootFfmpeg = "ffmpeg";
-
-        // Получаем путь к текущей рабочей директории
-        public static string currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
-        // Составляем полный путь к целевой папке
-        public static string folderPath = Path.Combine(CleanAfter(currentDirectory, "bin"), "temp");
-
-        //MakeFolder(folderPath);
+        public static string folderPath = MakeFolderPath("temp");
         public static string LastSaved => $"{folderPath}\\{name}{CommandManager.Type}";         
         public static string name = "audiofile";
 
@@ -46,14 +40,14 @@ namespace AudioEditor
             return string.Join('\\', res);
 
         }
-        private static void MakeFolder(string folderPath)
+        private static string MakeFolderPath(string pathName)
         {
 
-            // Удаляем папку и создаем
-            Directory.Delete(folderPath, true);
-            if (!Directory.Exists(folderPath))
-                Directory.CreateDirectory(folderPath);
-          
+            // Получаем путь к текущей рабочей директории
+            var currentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            // Составляем полный путь к целевой папке
+            return Path.Combine(CleanAfter(currentDirectory, "bin"), pathName);
+
         }
 
         public static void BytesToMp3(byte[] audioBytes, string outputPath)
